@@ -56,7 +56,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                             <div className='flex flex-wrap mt-2'>
                                 {tags.map((tag, index) => (
                                     <Link key={index} href={`/tags/${tag}`} passHref>
-                                        <div className='mr-2 mb-2 inline-block bg-blue-100 dark:bg-blue-200 text-blue-800 dark:text-blue-900 px-2 py-1 rounded-full text-sm hover:bg-blue-200 dark:hover:bg-blue-300'>
+                                        <div className='mr-2 mb-2 inline-block no-underline bg-blue-100 dark:bg-blue-200 text-blue-800 dark:text-blue-900 px-2 py-1 rounded-full text-sm hover:bg-blue-200 hover:text-green-300 dark:hover:bg-blue-300'>
                                             {tag}
                                         </div>
                                     </Link>

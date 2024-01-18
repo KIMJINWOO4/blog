@@ -29,7 +29,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
     }
 
     return (
-        <div className='flex flex-col min-h-screen bg-white dark:bg-gray-700'>
+        <div className='flex flex-col min-h-screen dark:bg-gray-700'>
             <Header />
             <main className='flex-grow container mx-auto p-4'>
                 <article className='prose lg:prose-xl dark:prose-dark max-w-none'>
@@ -57,7 +57,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
                     >
                         {postData.tags.map((tag, index) => (
                             <Link key={index} href={`/tags/${tag}`} passHref>
-                                <div className='bg-blue-100 dark:bg-blue-200 text-blue-800 hover:bg-slate-400 hover:text-green-400 dark:text-blue-900 mr-2 mb-2 px-2 py-1 rounded-full cursor-pointer'>
+                                <div className='bg-blue-100 dark:bg-blue-200 no-underline text-blue-800 hover:bg-slate-400 hover:text-green-400 dark:text-blue-900 mr-2 mb-2 px-2 py-1 rounded-full cursor-pointer'>
                                     {tag}
                                 </div>
                             </Link>

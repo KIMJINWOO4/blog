@@ -1,13 +1,13 @@
 /* common markdown */
 .prose {
-    @apply text-secondary;
+    @apply text-black dark:text-primary;
 }
 .prose strong,
 .prose h2,
 .prose h3,
 .prose h4,
 .prose thead th {
-    @apply text-primary;
+    @apply text-black dark:text-primary;
 }
 
 .prose del {
@@ -27,7 +27,7 @@
 }
 
 .prose a {
-    @apply text-primary break-words transition-all;
+    @apply text-indigo-500 hover:text-green-400 no-underline break-words transition-all;
     @apply decoration-neutral-450 underline-offset-2 hover:decoration-neutral-350;
 }
 .prose a:has(strong) {
@@ -40,8 +40,8 @@
 }
 
 .prose code:not(:where(pre *)) {
-    @apply text-primary rounded-lg px-2 py-0.5 content-none;
-    @apply bg-neutral-200 dark:bg-[var(--prism-background)];
+    @apply text-black dark:text-white rounded-lg px-2 py-0.5 content-none;
+    @apply bg-gray-300 dark:bg-gray-600;
 }
 
 .prose pre::-webkit-scrollbar {
