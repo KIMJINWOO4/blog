@@ -34,7 +34,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             className='flex flex-col min-h-screen bg-white dark:bg-gray-800'
         >
             <Header />
-            <div className='flex-grow container mx-auto p-4'>
+            <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
                 <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white'>
                     All Posts ({allPostsData.length})
                 </motion.h1>

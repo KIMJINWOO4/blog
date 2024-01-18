@@ -31,7 +31,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
     return (
         <div className='flex flex-col min-h-screen dark:bg-gray-700'>
             <Header />
-            <main className='flex-grow container mx-auto p-4'>
+            <main className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
                 <article className='prose lg:prose-xl dark:prose-dark max-w-none'>
                     <motion.h1
                         initial={{ opacity: 0, x: -100 }}
