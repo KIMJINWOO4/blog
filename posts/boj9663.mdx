@@ -1,0 +1,143 @@
+---
+title: '[BOJ] 9663번 : N-Queen'
+date: '2024-01-09'
+tags: ['9663', 'N-Queen']
+series: 'BOJ'
+---
+
+> 문제
+> N-Queen 문제는 크기가 N × N인 체스판 위에 퀸 N개를 서로 공격할 수 없게 놓는 문제이다.
+> N이 주어졌을 때, 퀸을 놓는 방법의 수를 구하는 프로그램을 작성하시오.
+
+> 입력
+> 첫째 줄에 N이 주어진다. (1 ≤ N < 15)
+
+> 출력
+> 첫째 줄에 퀸 N개를 서로 공격할 수 없게 놓는 경우의 수를 출력한다.
+
+풀어봤던 문제를 다시 풀어봤다.
+
+DFS와 백트래킹 방식을 사용한다는 것을 알면
+간단하게 풀 수 있는 문제이다.
+
+```c
+int main(void)
+{
+	int i;
+	int tmp[15];
+
+	scanf("%d", &i);
+	if (i > 0 && i < 16)
+	{
+		count = 0; //전역변수
+		start(tmp, 0, i);
+		printf("%d", count);
+	}
+	return 0;
+}
+```
+
+1. scanf로 1~15까지의 숫자를 입력받는다.
+2. DFS 탐색을 진행할 함수로 입력 받은 숫자와 0 ~ (i - 1)번째 인덱스에 놓여질 체스판 배열 tmp를 보내준다.
+
+```c
+void start(int *tmp, int i, int max)
+{
+	if (i == max)
+	{
+		count++;
+		return ;
+	}
+	else
+	{
+		for(int val = 0; val < max; val++)
+		{
+			if(check(tmp, val, i) && val < max)
+				start(tmp, i + 1, max);
+		}
+	}
+}
+```
+
+각 행에 조건을 만족하는 위치를 찾는다면
+다음 인덱스로 넘어가며 탐색할 재귀함수이다.
+
+현재 탐색중인 위치가 조건과 일치하지 않는다면
+value가 max (입력받은 값)보다 작을 때까지 반복문을 돌며 조건에 일치하는지 check 함수를 통해 현재 인덱스에 value가 들어갈 수 있는지 0부터 현재 인덱스 - 1까지 서로를 죽일 수 있는 위치인지 체크한다.
+
+```c
+int check(int *tmp, int val, int i)
+{
+	int crossone, crosstwo;
+	for(int j = 0; j < i ; j++)
+	{
+		crossone = j - tmp[j];
+		crosstwo = j + tmp[j];
+		if (tmp[j] == val || crossone == (i - val) || crosstwo == (i + val))
+			return 0;
+	}
+	*(tmp + i) = val;
+	return 1;
+}
+```
+
+왼쪽과 오른쪽의 대각선 방향과 열에 대한 위치를 체크해준다.
+(행에 대한 검사는 check 함수의 반환 값이 1일 경우
+해당 index의 다음 value에 대한 경우의 수를 검사하지 않고 다음 행으로 넘어가기 때문에 각 행에는 1개만 존재할 수 있어 검사하지 않아도 된다.)
+
+이렇게 구성되어 index가 max와 같아진다면
+서로를 잡아먹지 않고 각 행에 퀸이 존재하는 n x n의 체스판 1개가 완성되기 때문에 count를 1만큼 증가시키는 방식이다.
+
+**전체 코드**
+
+```c
+#include <stdio.h>
+
+int count;
+
+int check(int *tmp, int val, int i)
+{
+	int cx, cy;
+	for(int j = 0; j < i ; j++)
+	{
+		cx = j - tmp[j];
+		cy = j + tmp[j];
+		if (tmp[j] == val || cx == (i - val) || cy == (i + val))
+			return 0;
+	}
+	*(tmp + i) = val;
+	return 1;
+}
+
+void start(int *tmp, int i, int max)
+{
+	if (i == max)
+	{
+		count++;
+		return ;
+	}
+	else
+	{
+		for(int val = 0; val < max; val++)
+		{
+			if(check(tmp, val, i) && val < max)
+				start(tmp, i + 1, max);
+		}
+	}
+}
+
+int main(void)
+{
+	int i;
+	int tmp[15];
+
+	scanf("%d", &i);
+	if (i > 0 && i < 16)
+	{
+		count = 0;
+		start(tmp, 0, i);
+		printf("%d", count);
+	}
+	return 0;
+}
+```

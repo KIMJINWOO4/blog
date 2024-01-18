@@ -1,0 +1,17 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.prose img {
+    max-width: 100%;
+    height: auto;
+}
+
+.dark .prose {
+    /* 다크 모드에서의 텍스트 색상 */
+    color: #d1d5db;
+}
+.dark .prose a {
+    /* 다크 모드에서의 링크 색상 */
+    color: #93c5fd;
+}

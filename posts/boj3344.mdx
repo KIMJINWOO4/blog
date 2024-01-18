@@ -1,0 +1,86 @@
+---
+title: '[BOJ] 3344번 : N-Queen'
+date: '2024-01-09'
+tags: ['9663', 'N-Queen']
+series: 'BOJ'
+---
+
+> 문제
+>
+> 8x8 체스보드에 8개의 퀸을 서로 공격하지 못하게 놓는 문제는 잘 알려져 있는 문제이다. 퀸은 같은 행, 열, 또는 대각선 위에 있는 말을 공격할 수 있다.
+> 이 문제의 조금 더 일반화된 문제는 Franz Nauck이 1850년에 제기했다.
+> NxN 보드에 N개의 퀸을 서로 다른 두 퀸이 공격하지 못하게 놓는 경우의 수는 몇 가지가 있을까?
+> N이 주어졌을 때, NxN 보드에 N개의 퀸을 서로 다른 두 퀸이 공격하지 못하게 놓는 한가지 경우를 출력하는 프로그램을 작성하시오.
+
+> 입력
+>
+> 첫째 줄에 N이 주어진다. N은 8, 26, 213, 2012, 99991, 99999중 하나이다.
+
+원래 알고 있는 N-Queen 문제와 비슷한 방법으로 접근하여 풀려고 했지만 문제에 요구된 시간과 메모리 제한이 절대 백트래킹으로는 감당할 수 없을 것 같아서 다른 방법을 찾아보기로 했다.
+
+위키피디아의 Eight queens puzzle 문서 중
+
+> 1. If the remainder from dividing n by 6 is not 2 or 3 then the list is simply all even numbers followed by all odd numbers not greater than n.
+> 2. Otherwise, write separate lists of even and odd numbers (2, 4, 6, 8 – 1, 3, 5, 7).
+> 3. If the remainder is 2, swap 1 and 3 in odd list and move 5 to the end (3, 1, 7, 5).
+> 4. If the remainder is 3, move 2 to the end of even list and 1,3 to the end of odd list (4, 6, 8, 2 – 5, 7, 1, 3).
+> 5. Append odd list to the even list and place queens in the rows given by these numbers, from left to right (a2, b4, c6, d8, e3, f1, g7, h5).
+
+이 부분을 참고하여 플로우를 만들어 보았다.
+
+> 기본적으로 [짝수] [홀수] 순으로 체스판에 퀸을 놓는다.
+
+> case 1.
+>
+> N을 6으로 나누는 것의 나머지가 2나 3이 아니라면,
+> 홀수를 먼저 각 행에 삽입 후 짝수를 그 뒤에 붙여 삽입.
+> 순서대로 (2 - 4 .. ~ 1 - 3 ..)
+
+> case 2.
+>
+> 2로 나뉠 경우, 홀수에 대해
+> (3 -> 1 -> (3 1 5를 제외한) n까지의 홀수들 -> 5)
+> 순서로 삽입.
+
+> case 3.
+>
+> 3으로 나뉠 경우, 2를 짝수의 마지막 순서에 배치 후
+> 1,3을 홀수 목록의 끝에 배치
+> (4, 6, ~(n까지의 짝수들)~ 2 - 5, 7, ~(n까지의 홀수들)~ 1, 3)
+
+이렇게 나누어 각각의 case를 if로 만들어 구현해주면 완성이다.
+
+```c
+void check(int *tmp, int n)
+{
+	if(n % 3 != 0 && n % 2 != 0)
+	{
+		for(int i = 1; i <= (n / 2); i++)
+			tmp[count++] = (2 * i) - 1;
+ 		if(n % 2 ==1)
+			tmp[count++]  = n;
+ 		for(int i = 1; i <= (n / 2); i++)
+			tmp[count++] = (2 * i);
+	}
+	else if (n % 2 == 0)
+	{
+		for(int i = 1; i <= (n / 2); i++)
+			tmp[count++] = (i * 2);
+ 		tmp[count++] = 3;
+		tmp[count++] = 1;
+ 		for(int i = ((n / 2) + 2); i < (n - 1); i++)
+			tmp[count++] = ++(2 * (i - (n / 2) + 1));
+		tmp[count++] = 5;
+	}
+	else if(n % 6 == 3)
+	{
+		for(int i = 2; i <= n / 2; i++)
+			tmp[count++] = (i * 2);
+ 		tmp[count++] = 2;
+ 		for(int i = (n / 2); i< (n - 2); i++)
+			tmp[count++] = ++(((i - (n / 2)) + 2) * 2);
+		tmp[count++] = 1;
+		tmp[count++] = 3;
+	}
+}
+```

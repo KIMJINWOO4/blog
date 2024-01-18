@@ -1,0 +1,60 @@
+---
+title: '[42Seoul] ft_printf'
+date: '2024-01-08'
+tags: ['42Seoul']
+series: '42Seoul'
+---
+
+나만의 printf 구현하기 !
+
+중요했던 부분은 가변인자를 사용하는 방법이었다.
+
+`stdarg.h`에 포함된
+`va_start(va_list, param)`는 매크로 함수로써
+`va_list(가변인자의 주소를 담는 자료형)`, `param(가르키고자 하는 인자의 주소)`
+va_list에 param의 주소 + param의 길이를 더한 주소를 저장한다.
+
+할당된 va_list를 사용할 때 `va_arg(va_list, 자료형)` 사용하는데
+va_arg는 다음 가변 인자를 매개변수로 넣어준 자료형으로 반환하며 그 자료형만큼 주소를 뒤로 넘긴다.
+
+va_end는 va_list가 가르키고 있는 주소를 NULL로 지정해준다.
+
+> 구현해야하는 포맷
+> %c, %s, %d, %i, %u, %p, %x, %X, %%
+> 그 외의 포맷에 대한 처리는 mandatory에서 요구하지 않기 때문에 처리는 자유이다.
+
+#### main
+
+```c
+int	ft_printf(const char *format, ...)
+{
+	va_list ap;
+    int		i;
+   	va_start(ap, format);
+    while(*(format))
+    {
+    	if(*(format) == '%')
+        {
+        	format++;
+            ft_isprint(ap, *(format), &i);
+        }
+        else
+        	ft_putchar(*(format), &i);
+       if (i == -1)
+       {
+       		va_end(ap);
+            return (i);
+       }
+       format++;
+    }
+    va_end(ap);
+    return (i);
+```
+
+#### 내용 설명
+
+인자를 하나씩 읽으며 해당하는 `%`가 나올 경우 각 format의 출력 함수로 보내서 각 Format에 맞게 출력해주고 `%`가 아닌 글자에 대해선 그대로 출력해준다.
+
+> **실제 printf에서 사용하는 버퍼 관리에 대해서는 수행하지 않아도 됩니다.**
+
+각 Format에 대한 출력 방법은 ft_printf를 구현하는 재미이자 이유이기에 각각의 구현은 사람마다 다르고 내가 만든 코드가 완벽하다고 생각하지 않아서 기록하지 않기로 했다 !!

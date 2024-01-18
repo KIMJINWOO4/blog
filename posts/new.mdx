@@ -1,0 +1,63 @@
+---
+title: '[오류 해결] react 공공API가져오기 (CORS 오류)'
+date: '2024-01-12'
+tags: ['api', 'CORS']
+series: '트러블슈팅'
+---
+
+### CORS가 뭐지 ??
+
+공공 데이터 OPEN API를 가져오는 도중
+`...from origin 'null' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource`
+와 같은 오류가 나왔다.
+
+CORS는 Cross-Origin Resource Sharing의 약자로 제한된 리소스를 도메인 밖의 다른 도메인으로부터 요청할 수 있게 해주는 구조이다.
+
+제한된 리소스를 요청하려면 Origin-Header(신뢰가 가능하다는 보장 ?)를 가지고 요청하면 되는데 현재 local에서 작업 중이기 때문에 올바른 Origin을 가지고 요청할 수 없다고 이해했다. 때문에 이 에러를 우회하여 해결할 방법들을 찾았다.
+
+---
+
+#### 1.
+
+환경이 Chrome을 사용할 경우 확장 프로그램 `jsonp`를 통해 가져오는 방법으로 사용할 수 있다.
+
+#### 2.
+
+서버를 열어서 서버에서 API 데이터를 받아준 뒤 사용할 곳에 포워딩한다.
+
+#### 3.
+
+react에서 `http-proxy-middleware`를 사용해서 proxy로 로컬 환경에서 처리한 후 배포 시 `nginx`와 같은 서버단에서 처리해주면 된다.
+
+나는 이 중에 일단 개인적으로 프론트에서 구현하기 위해 세번째 방법을 선택했다.
+
+이미 axios에 대한 처리를 다 해놨었지만 예상치 못한 오류로 눈물을 머금고 삭제했다. (이래서 테스트 먼저 해야되는데..)
+
+---
+
+### 사용 방법
+
+`npm i http-proxy-middleware`로 패키지를 설치한 후
+`/src/setupProxy.js`를 만들고 proxy를 설정한다.
+
+파일 내
+`const { createProxyMiddleware } = require("http-proxy-middleware");`로 미들웨러를 만드는 함수를 가져온다.
+
+```python
+module.exports = function (app) {
+    app.use(
+        // "/api"가 맨 앞에 붙은 axios 요청에 대해
+        createProxyMiddleware('/api', {
+            target: 'endpoint', //엔드 포인트 URL 삽입
+            changeOrigin: true, //Origin을 target으로 변경하여 api 요청
+            pathRewrite: {
+                '^/api': '', // "/api"->null로 변경시켜 요청
+            },
+        })
+    );
+};
+```
+
+이렇게 설정을 하고 요청을 하면 된다.
+요청 예시는 `axios.get("/api/product");`
+와 같이 요청하면 원래는 `localhost:3000/api/product`로 요청이 갈 것이다. 하지만 proxy 설정을 했기 때문에 `endpoint/product` 와 같이 요청이 갈 것이다. (/api -> null)
