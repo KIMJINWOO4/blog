@@ -39,7 +39,10 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                         >
                             <Link href={`/series/${serie.name}`}>
                                 <div className='text-xl font-semibold'>{serie.name}</div>
-                                <div className='text-right'>☰ {serie.posts.length} posts </div>
+                                <div className='flex justify-between'>
+                                    <div className='text-left'>⚑ {findMostRecentPostInSeries(serie.posts)?.date}</div>
+                                    <div className='text-right'>☰ {serie.posts.length} posts </div>
+                                </div>
                             </Link>
                         </motion.div>
                     ))}
@@ -60,5 +63,15 @@ export const getStaticProps: GetStaticProps = async () => {
         },
     };
 };
+
+function findMostRecentPostInSeries(postsArray: PostMetadata[]): PostMetadata | null {
+    let mostRecentPost: PostMetadata | null = null;
+
+    const mostRecentPostInSeries = postsArray.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )[0];
+
+    return mostRecentPostInSeries;
+}
 
 export default SeriesPage;

@@ -81,3 +81,8 @@
 .prose *:hover > .anchor {
     @apply md:opacity-100;
 }
+
+.prose .rehype-code-title {
+    /* ... */
+    @apply rounded-t-lg border border-b-0 px-5 py-3 text-sm font-bold;
+}

@@ -10,6 +10,7 @@ import rehypeHighlight from 'rehype-highlight';
 import langHttp from 'highlight.js/lib/languages/http';
 import langNginx from 'highlight.js/lib/languages/nginx';
 import { PostMetadata } from '../../../types/post';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 interface PostProps {
     postData: PostMetadata;
@@ -17,7 +18,7 @@ interface PostProps {
 const options = {
     mdxOptions: {
         remarkPlugins: [],
-        rehypePlugins: [[rehypeHighlight, { languages: { http: langHttp, nginx: langNginx } }]],
+        rehypePlugins: [[rehypeHighlight, rehypeAutolinkHeadings, { languages: { http: langHttp, nginx: langNginx } }]],
     },
 };
 
