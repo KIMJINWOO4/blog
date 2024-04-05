@@ -1,0 +1,118 @@
+---
+title: '[next.js] next.js 14에서 code highlight 적용하기'
+date: '2024-04-05'
+tags: ['next.js', 'mdx']
+series: 'next.js'
+---
+
+## 하이라이팅과 모드 대응을 통한 변화
+
+### 서론
+
+블로그를 만들기 시작한 지 이미 한참이 지났지만, '기록해야지'하는 생각만 가득하고 실제로 손에 잡힌 것은 별로 없었다.
+
+하지만, 마크다운을 활용해 열심히 내용을 구성하며 MDX를 파싱하는 과정에서 `MDXRemote`와 `MDXParser`를 사용했다.
+
+모든 것이 순조로울 줄 알았으나, 백틱 세 개(```)를 사용하는 코드 블록에서 예상치 못한 문제가 발생했다.
+
+코드 블록에 각 언어별로 하이라이팅을 적용해주는 `rehypeHighlight` 라이브러리에서 문제가 생겼다.
+
+각 블로그 글을 보여주는 페이지에서 아래와 같이 처리했음에도 불구하고,
+
+```jsx
+// posts/[id].tsx
+const options = {
+    mdxOptions: {
+        remarkPlugins: [],
+        rehypePlugins: [[rehypeHighlight, rehypeAutolinkHeadings, { languages: { http: langHttp, nginx: langNginx } }]],
+    },
+};
+```
+
+코드 블록에 하이라이팅할 언어를 명시해도 하이라이팅이 적용되지 않았고, 글자와 코드 블록에 대한 CSS가 달라 글자 색상만 다르게 나오는 문제가 발생했습니다. 이 문제로 인해 블로그의 배포를 망설이게 되었다.
+
+![](https://velog.velcdn.com/images/keroeroe14/post/bd5af2a3-d5a0-438c-90d4-15e656c8778e/image.png)
+
+-   당시의 대참사를 보여주는 예시 사진
+    (심지어 하이라이팅은 적용되지 않았었다..)
+
+하지만, 다행히도
+[mdx-syntax-highlighting-in-next-js](https://code.likeagirl.io/mdx-syntax-highlighting-in-next-js-b1715a4d76e3)라는 구세주 같은 링크를 발견했다.
+
+이를 통해 `mdxOptions` 설정 과정에 문제가 있었음을 깨닫고, 수정에 착수했다.
+
+### 수정 전
+
+```jsx
+const options = {
+    mdxOptions: {
+        remarkPlugins: [],
+        rehypePlugins: [[rehypeHighlight, rehypeAutolinkHeadings, { languages: { http: langHttp, nginx: langNginx } }]],
+    },
+};
+
+<MDXRemote {...postData.mdxSource} {...options} />;
+```
+
+### 수정 후
+
+```jsx
+// lib/posts.ts
+export async function getPostData(id: string): Promise<any> {
+    const postsDirectory = path.join(process.cwd(), 'posts');
+    const fullPath = path.join(postsDirectory, `${id}.mdx`);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const { content, data } = matter(fileContents);
+
+    const mdxSource = await serialize(content, {
+        mdxOptions: {
+            rehypePlugins: [rehypeHighlight as unknown as Pluggable],
+        },
+    });
+    return {
+        id,
+        mdxSource,
+        title: data.title,
+        date: data.date,
+        tags: data.tags,
+        series: data.series,
+    };
+}
+```
+
+**수정 후, 하이라이팅이 정상적으로 적용되었다.**
+
+마무리로 CSS를 통해 라이트 모드와 다크 모드에 대응하는 디자인도 마무리했다.
+
+```css
+/* prose.css */
+.prose pre {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    @apply bg-gray-100 dark:bg-zinc-300;
+}
+```
+
+```css
+/* highlight-js.css */
+
+.hljs {
+    @apply text-gray-800 bg-gray-100 dark:bg-zinc-300;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+    @apply text-red-600 bg-gray-100 dark:bg-zinc-300;
+}
+```
+
+![](https://velog.velcdn.com/images/keroeroe14/post/189e7012-dfc6-4d7f-9837-e0f6e724d3dd/image.png)
+
+**완성된 코드 블록!!!**
+
+아직도 부족한 부분이 많고 예쁘지 않은 느낌이 들어 좀 만족스럽지 않지만 배포를 하고 `netlify`의 편리한 ci/cd 기능을 활용해 즉각적으로 코드를 개선해 나가야겠다.
