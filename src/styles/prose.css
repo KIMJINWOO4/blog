@@ -50,6 +50,7 @@
 .prose pre {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    @apply bg-gray-100 dark:bg-zinc-300;
 }
 
 /* prose first child, not <TocTop /> */

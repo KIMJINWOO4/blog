@@ -19,7 +19,7 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='flex flex-col min-h-screen bg-white dark:bg-gray-800'
+            className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
             <Header />
             <div className='flex-grow px-4 py-8 container mx-auto p-4'>
@@ -34,11 +34,12 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                     {series.map((serie) => (
                         <motion.div
                             key={serie.name}
-                            className='border dark:bg-gray-500 p-4  text-center rounded-lg'
+                            className='border border-gray-300 dark:border-gray-700 bg-white dark:bg-zinc-600 shadow-md rounded-lg p-4 text-center transition-transform transform hover:scale-105'
                             variants={fadeInUp}
                         >
                             <Link href={`/series/${serie.name}`}>
                                 <div className='text-xl font-semibold'>{serie.name}</div>
+                                <div className='text-right'>☰ {serie.posts.length} posts </div>
                             </Link>
                         </motion.div>
                     ))}

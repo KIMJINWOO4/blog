@@ -9,7 +9,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className='bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-4 shadow-md'>
+        <header className='bg-white dark:bg-zinc-800 text-gray-900 dark:text-white p-4 shadow-md'>
             <div className='container mx-auto flex items-center justify-between'>
                 {/* 로고 */}
                 <Link href='/'>
@@ -24,7 +24,7 @@ const Header = () => {
                             <span role='img' aria-label='logo' className='text-2xl'>
                                 📚
                             </span>
-                            <span className='text-xl font-semibold ml-2'>KIMJINWOO's Blog</span>
+                            <span className='text-xl font-semibold ml-2'>K - log</span>
                         </motion.div>
                     </div>
                 </Link>

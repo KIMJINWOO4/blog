@@ -21,7 +21,7 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='flex flex-col min-h-screen bg-white dark:bg-gray-800'
+            className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
             <Header />
             <motion.div variants={staggerOne} className='flex-grow p-4 container mx-auto px-4 py-8'>
@@ -36,7 +36,7 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
                         <motion.li
                             key={post.id}
                             variants={fadeInUp}
-                            className='bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow'
+                            className='bg-gray-100 dark:bg-zinc-600 p-4 rounded-lg shadow'
                         >
                             <Link href={`/posts/${post.id}`}>
                                 <div className='text-xl font-semibold hover:underline dark:text-white'>

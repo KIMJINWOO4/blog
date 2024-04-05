@@ -1,6 +1,6 @@
 /* Tailwind CSS로 변환된 .hljs 스타일 */
 .hljs {
-    @apply text-gray-800 bg-white;
+    @apply text-gray-800 bg-gray-100 dark:bg-zinc-300;
 }
 
 /* Keyword, Doctag 등 */
@@ -11,7 +11,7 @@
 .hljs-template-variable,
 .hljs-type,
 .hljs-variable.language_ {
-    @apply text-red-600;
+    @apply text-red-600 bg-gray-100 dark:bg-zinc-300;
 }
 
 /* Title */

@@ -31,7 +31,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='flex flex-col min-h-screen bg-white dark:bg-gray-800'
+            className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
             <Header />
             <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
@@ -42,12 +42,12 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 transition-colors'
+                            className='mb-5 p-4 border-b border-gray-200 dark:border-zinc-800 transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
                                 <div className='block'>
-                                    <h2 className='text-2xl font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline'>
+                                    <h2 className='text-2xl font-bold text-black hover:text-blue-800 dark:text-white dark:hover:text-blue-300 hover:underline'>
                                         {title}
                                     </h2>
                                     <p className='text-gray-500 dark:text-gray-300'>{date}</p>
