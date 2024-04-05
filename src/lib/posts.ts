@@ -8,6 +8,7 @@ import { PostMetadata } from '../../types/post';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 import rehypeHighlight from 'rehype-highlight';
+import { Pluggable } from 'unified';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 
@@ -38,20 +39,24 @@ export function getAllPostIds() {
     });
 }
 
-export async function getPostData(id: string): Promise<PostMetadata> {
+export async function getPostData(id: string): Promise<any> {
+    const postsDirectory = path.join(process.cwd(), 'posts');
     const fullPath = path.join(postsDirectory, `${id}.mdx`);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { content, data } = matter(fileContents);
 
-    const mdxSource = await serialize(content);
-
+    const mdxSource = await serialize(content, {
+        mdxOptions: {
+            rehypePlugins: [rehypeHighlight as unknown as Pluggable], // rehype-highlight 플러그인 추가
+        },
+    });
     return {
         id,
         mdxSource,
-        title: data.title, // data 객체에서 title 추출
-        date: data.date, // data 객체에서 date 추출
-        tags: data.tags, // data 객체에서 tags 추출
-        series: data.series, // data 객체에서 series 추출
+        title: data.title,
+        date: data.date,
+        tags: data.tags,
+        series: data.series,
     };
 }
 
