@@ -22,7 +22,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='flex flex-col min-h-screen bg-white dark:bg-gray-800'
+            className='flex flex-col min-h-screen bg-white dark:bg-zinc-600'
         >
             <Header />
             <div className='flex-grow container mx-auto p-4'>
