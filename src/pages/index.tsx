@@ -4,8 +4,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { fadeInUp, staggerHalf, fadeInSlideToLeft } from '../constants/animations';
+import { fadeInUp, staggerHalf, fadeInSlideToLeft, fadeInHalf } from '../constants/animations';
 import Head from 'next/head';
+import ToggleInfo from '@/components/common/ToggleInfo';
 
 export const getStaticProps = async () => {
     const allPostsData = getSortedPostsData();
@@ -40,14 +41,34 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
-                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white'>
+                <div className='dark:text-white dark:border-white py-6 border-b-2 pb-4 border-spacing-2 font-serif border-zinc-700 '>
+                    <motion.section variants={staggerHalf} initial='initial' animate='animate'>
+                        <h1 className=' text-5xl mb-4 font-bold'>jinwoo kim</h1>
+
+                        <motion.div variants={fadeInHalf} className='mt-6 mb-4'>
+                            Aspiring Frontend Web Developer
+                        </motion.div>
+                        <motion.div variants={fadeInHalf}>
+                            <p>
+                                Aspiring to become a developer who prioritizes user experience, utilizing technologies
+                                like React, Next.js, and Typescript.
+                            </p>
+                        </motion.div>
+
+                        <motion.div variants={fadeInHalf} className='my-4'>
+                            <ToggleInfo className='dark: text-gray-400 hover:text-gray-950'></ToggleInfo>
+                        </motion.div>
+                    </motion.section>
+                </div>
+
+                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 pt-6 dark:text-white'>
                     All Posts ({allPostsData.length})
                 </motion.h1>
                 <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit'>
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-5 p-4 border-b border-gray-200 dark:border-zinc-800 transition-colors'
+                            className='mb-5 p-4 border-b border-zinc-600 dark:border-white transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
