@@ -25,10 +25,10 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
         >
             <Header />
             <div className='flex-grow container mx-auto p-4'>
-                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white'>
+                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white font-mono'>
                     태그: {tag}
                 </motion.h1>
-                <motion.h3 variants={fadeInSlideToLeft} className='text-ml font-bold my-4 dark:text-white'>
+                <motion.h3 variants={fadeInSlideToLeft} className='text-ml font-bold my-4 dark:text-white font-mono'>
                     검색 결과: {filteredPosts.length}건
                 </motion.h3>
                 <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit' className='list-none'>
@@ -36,22 +36,21 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                         <motion.li
                             key={post.id}
                             variants={fadeInUp}
-                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors'
+                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-md'
                         >
                             <Link href={`/posts/${post.id}`}>
                                 <div className='block'>
-                                    <h2 className='text-xl font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300'>
+                                    <h2 className='text-xl font-bold text-black mb-2 dark:text-white hover: dark:hover:text-black'>
                                         {post.title}
                                     </h2>
-                                    <p className='text-gray-500'>{post.date}</p>
+                                    <p className='text-gray-500 mb-2'>{post.date}</p>
                                     <div className='flex flex-wrap'>
                                         {post.tags.map((tag, index) => (
-                                            <span
-                                                key={index}
-                                                className='bg-blue-100 dark:bg-blue-200 text-blue-800 hover:bg-slate-400 hover:text-green-400 dark:text-blue-900 mr-2 mb-2 px-2 py-1 rounded-full cursor-pointer'
-                                            >
-                                                {tag}
-                                            </span>
+                                            <Link key={index} href={`/tags/${tag}`} passHref>
+                                                <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono'>
+                                                    {tag}
+                                                </div>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>

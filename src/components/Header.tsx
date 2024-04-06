@@ -24,7 +24,7 @@ const Header = () => {
                             <span role='img' aria-label='logo' className='text-2xl'>
                                 📚
                             </span>
-                            <span className='text-xl font-semibold ml-2'>K - log</span>
+                            <span className='text-xl font-semibold ml-2 font-serif'>K - log</span>
                         </motion.div>
                     </Link>
                     {/* 네비게이션 메뉴 */}

@@ -68,12 +68,12 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-5 p-4 border-b border-zinc-600 dark:border-white transition-colors'
+                            className='mb-2 p-2 border-b border-zinc-600 dark:border-white hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
                                 <div className='block'>
-                                    <h2 className='text-2xl font-bold text-black hover:text-blue-800 dark:text-white dark:hover:text-blue-300 hover:underline'>
+                                    <h2 className='text-2xl font-bold mb-2 text-black dark:text-white dark:hover:text-blue-300'>
                                         {title}
                                     </h2>
                                     <p className='text-gray-500 dark:text-gray-300'>{date}</p>
@@ -82,7 +82,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                             <div className='flex flex-wrap mt-2'>
                                 {tags.map((tag, index) => (
                                     <Link key={index} href={`/tags/${tag}`} passHref>
-                                        <div className='mr-2 mb-2 inline-block no-underline bg-blue-100 dark:bg-blue-200 text-blue-800 dark:text-blue-900 px-2 py-1 rounded-full text-sm hover:bg-blue-200 hover:text-green-300 dark:hover:bg-blue-300'>
+                                        <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 mb-2 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono'>
                                             {tag}
                                         </div>
                                     </Link>

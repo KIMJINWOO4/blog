@@ -58,7 +58,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
                     >
                         {postData.tags.map((tag, index) => (
                             <Link key={index} href={`/tags/${tag}`} passHref>
-                                <div className='bg-blue-100 dark:bg-blue-200 no-underline text-blue-800 hover:bg-slate-400 hover:text-green-400 dark:text-blue-900 mr-2 mb-2 px-2 py-1 rounded-full cursor-pointer'>
+                                <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 ring-1 text-black dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono'>
                                     {tag}
                                 </div>
                             </Link>

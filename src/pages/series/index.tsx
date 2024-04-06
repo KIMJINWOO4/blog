@@ -23,10 +23,10 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
         >
             <Header />
             <div className='flex-grow px-4 py-8 container mx-auto p-4'>
-                <motion.h1 className='text-3xl dark:text-white *:font-bold mb-4' variants={fadeInUp}>
+                <motion.h1 className='text-3xl dark:text-white *:font-bold mb-4 font-mono' variants={fadeInUp}>
                     Series
                 </motion.h1>
-                <p className='text-xl dark:text-white *:font-bold mb-4'>검색결과 {series.length}건</p>
+                <p className='text-xl dark:text-white *:font-bold mb-4 font-mono'>검색결과 {series.length}건</p>
                 <motion.div
                     className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 dark:text-white'
                     variants={staggerOne}
