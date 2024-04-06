@@ -2,6 +2,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+body {
+    font-family: 'Pretendard-Regular', sans-serif;
+}
 .prose img {
     max-width: 100%;
     height: auto;
