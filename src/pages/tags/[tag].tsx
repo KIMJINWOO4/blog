@@ -15,8 +15,6 @@ interface TagPageProps {
 const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
     const router = useRouter();
     const { tag } = router.query;
-    console.log(tag);
-    console.log(filteredPosts);
     return (
         <motion.div
             variants={staggerHalf}
