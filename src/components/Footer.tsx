@@ -30,7 +30,7 @@ const Footer = () => {
                 </div>
                 <p>
                     <span>© since 2024 </span>
-                    <a href='localhost:3000' className='text-primary transition hover:text-secondary'>
+                    <a href='https://ak-47.netlify.app/' className='text-primary transition hover:text-secondary'>
                         KIMJINWOO4's Blog
                     </a>
                     <span> Powered by </span>
