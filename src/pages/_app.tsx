@@ -10,10 +10,6 @@ const inter = Inter({ subsets: ['latin'] });
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <>
-            <Head>
-                <title>K - log</title>
-                <meta name='description' content='열심히 배우겠습니다.' />
-            </Head>
             <Component className={inter.className + 'dark: bg-zinc-700'} {...pageProps} />;
         </>
     );
