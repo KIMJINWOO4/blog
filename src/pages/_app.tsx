@@ -8,11 +8,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 function MyApp({ Component, pageProps }: AppProps) {
-    return (
-        <>
-            <Component className={inter.className + 'dark: bg-zinc-700'} {...pageProps} />;
-        </>
-    );
+    return <Component className={inter.className + 'dark: bg-zinc-700'} {...pageProps} />;
 }
 
 export default MyApp;

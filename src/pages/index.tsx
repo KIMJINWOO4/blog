@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerHalf, fadeInSlideToLeft } from '../constants/animations';
+import Head from 'next/head';
 
 export const getStaticProps = async () => {
     const allPostsData = getSortedPostsData();
@@ -33,6 +34,10 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             exit='exit'
             className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
+            <Head>
+                <title>K - log</title>
+                <meta name='description' content='열심히 배우겠습니다.' />
+            </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
                 <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white'>
