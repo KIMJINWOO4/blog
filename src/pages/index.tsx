@@ -38,6 +38,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             <Head>
                 <title>K - log</title>
                 <meta name='description' content='열심히 배우겠습니다.' />
+                <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
