@@ -13,7 +13,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Head>
                 <title>K - log</title>
                 <meta name='description' content='열심히 배우겠습니다.' />
-                <link rel='icon' href='../components/icons/favicon-16x16.png' sizes='any' />
             </Head>
             <main className={inter.className + 'dark: bg-zinc-700'}>
                 <Component {...pageProps} />;
