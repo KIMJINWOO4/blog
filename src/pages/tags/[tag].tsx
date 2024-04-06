@@ -14,8 +14,9 @@ interface TagPageProps {
 
 const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
     const router = useRouter();
-    const { tags } = router.query;
-
+    const { tag } = router.query;
+    console.log(tag);
+    console.log(filteredPosts);
     return (
         <motion.div
             variants={staggerHalf}
@@ -27,7 +28,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
             <Header />
             <div className='flex-grow container mx-auto p-4'>
                 <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white'>
-                    태그: {tags}
+                    태그: {tag}
                 </motion.h1>
                 <motion.h3 variants={fadeInSlideToLeft} className='text-ml font-bold my-4 dark:text-white'>
                     검색 결과: {filteredPosts.length}건
