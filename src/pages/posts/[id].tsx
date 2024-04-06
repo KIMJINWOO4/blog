@@ -11,20 +11,19 @@ import langHttp from 'highlight.js/lib/languages/http';
 import langNginx from 'highlight.js/lib/languages/nginx';
 import { PostMetadata } from '../../../types/post';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-
+import remarkToc from 'remark-toc';
 interface PostProps {
     postData: PostMetadata;
 }
 const options = {
     mdxOptions: {
-        remarkPlugins: [],
+        remarkPlugins: [remarkToc],
         rehypePlugins: [[rehypeHighlight, rehypeAutolinkHeadings, { languages: { http: langHttp, nginx: langNginx } }]],
     },
 };
 
 const Post: NextPage<PostProps> = ({ postData }) => {
     const router = useRouter();
-
     if (router.isFallback) {
         return <div>Loading...</div>;
     }

@@ -25,10 +25,10 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
         >
             <Header />
             <motion.div variants={staggerOne} className='flex-grow p-4 container mx-auto px-4 py-8'>
-                <motion.h1 variants={fadeInUp} className='text-3xl font-bold mb-6 dark:text-white'>
-                    {seriesName}
+                <motion.h1 variants={fadeInUp} className='text-3xl font-extrabold mb-6 dark:text-white font-serif'>
+                    Series Name: {seriesName}
                 </motion.h1>
-                <motion.h3 variants={fadeInUp} className='text-xl font-bold mb-6 dark:text-white'>
+                <motion.h3 variants={fadeInUp} className='text-xl font-bold mb-6 dark:text-white font-serif'>
                     Series Posts ({posts.length})
                 </motion.h3>
                 <motion.ul variants={staggerOne} className='space-y-4'>

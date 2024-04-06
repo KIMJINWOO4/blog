@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { fadeInUp, staggerOne, staggerHalf } from '@/constants/animations';
+import { fadeInUp, staggerOne, staggerHalf, fadeIn } from '@/constants/animations';
 import { getSeries } from '@/lib/posts';
 import { PostMetadata } from '../../../types/post';
 
@@ -23,23 +23,28 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
         >
             <Header />
             <div className='flex-grow px-4 py-8 container mx-auto p-4'>
-                <motion.h1 className='text-3xl dark:text-white *:font-bold mb-4 font-mono' variants={fadeInUp}>
+                <motion.h1 className='text-3xl dark:text-white mb-4 font-serif font-extrabold' variants={fadeInUp}>
                     Series
                 </motion.h1>
                 <p className='text-xl dark:text-white *:font-bold mb-4 font-mono'>검색결과 {series.length}건</p>
                 <motion.div
-                    className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 dark:text-white'
-                    variants={staggerOne}
+                    variants={fadeInUp}
+                    className='text-md dark:text-zinc-400 *:font-bold font-mono mt-4 mb-10 '
                 >
+                    시리즈는 제가 걸어온 길 위에서 마주했던 다양한 경험들과 생각들을 하나의 주제로 묶어 연재한 글들의
+                    모음입니다.
+                    <br /> 각각의 글은 저만의 이야기를 담고 있지만, 함께 모였을 때 더 큰 의미와 가치를 전달해 줍니다.
+                </motion.div>
+                <motion.div className='grid grid-cols-1 md:grid-cols-2 gap-4 dark:text-white' variants={staggerOne}>
                     {series.map((serie) => (
                         <motion.div
                             key={serie.name}
-                            className='border border-gray-300 dark:border-gray-700 bg-white dark:bg-zinc-600 shadow-md rounded-lg p-4 text-center transition-transform transform hover:scale-105'
+                            className='border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 hover:bg-secondary dark:hover:bg-zinc-500'
                             variants={fadeInUp}
                         >
                             <Link href={`/series/${serie.name}`}>
                                 <div className='text-xl font-semibold'>{serie.name}</div>
-                                <div className='flex justify-between'>
+                                <div className='flex justify-between items-center mt-2'>
                                     <div className='text-left'>⚑ {findMostRecentPostInSeries(serie.posts)?.date}</div>
                                     <div className='text-right'>☰ {serie.posts.length} posts </div>
                                 </div>

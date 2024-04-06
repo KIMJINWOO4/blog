@@ -3,6 +3,7 @@
     @apply text-black dark:text-primary;
 }
 .prose strong,
+.prose h1,
 .prose h2,
 .prose h3,
 .prose h4,
@@ -16,6 +17,10 @@
 
 .prose p {
     @apply leading-7 sm:leading-8;
+}
+
+.prose #toc {
+    display: none;
 }
 
 .prose img {
@@ -85,4 +90,10 @@
 .prose .rehype-code-title {
     /* ... */
     @apply rounded-t-lg border border-b-0 px-5 py-3 text-sm font-bold;
+}
+
+@media (min-width: 768px) {
+    .prose > ul:first-child {
+        display: none;
+    }
 }

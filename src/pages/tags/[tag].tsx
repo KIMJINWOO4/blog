@@ -25,10 +25,16 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
         >
             <Header />
             <div className='flex-grow container mx-auto p-4'>
-                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 dark:text-white font-mono'>
-                    태그: {tag}
+                <motion.h1
+                    variants={fadeInSlideToLeft}
+                    className='text-3xl font-extrabold my-4 dark:text-white font-serif'
+                >
+                    Tag : {tag}
                 </motion.h1>
-                <motion.h3 variants={fadeInSlideToLeft} className='text-ml font-bold my-4 dark:text-white font-mono'>
+                <motion.h3
+                    variants={fadeInSlideToLeft}
+                    className='text-xl font-extrabold my-4 dark:text-white font-mono'
+                >
                     검색 결과: {filteredPosts.length}건
                 </motion.h3>
                 <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit' className='list-none'>

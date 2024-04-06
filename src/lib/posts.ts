@@ -9,6 +9,9 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 import rehypeHighlight from 'rehype-highlight';
 import { Pluggable } from 'unified';
+import remarkToc from 'remark-toc';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 
@@ -47,7 +50,24 @@ export async function getPostData(id: string): Promise<any> {
 
     const mdxSource = await serialize(content, {
         mdxOptions: {
-            rehypePlugins: [rehypeHighlight as unknown as Pluggable], // rehype-highlight 플러그인 추가
+            remarkPlugins: [
+                [remarkToc, { ordered: true }], // 옵션을 전달하는 배열 형태로 설정
+            ],
+            rehypePlugins: [
+                rehypeHighlight as unknown as Pluggable,
+                rehypeSlug,
+                [
+                    rehypeAutolinkHeadings,
+                    {
+                        behaviour: 'append',
+                        properties: {
+                            ariaHidden: true,
+                            tabIndex: -1,
+                            className: 'hash-link',
+                        },
+                    },
+                ],
+            ], // rehype-highlight 플러그인 추가
         },
     });
     return {
