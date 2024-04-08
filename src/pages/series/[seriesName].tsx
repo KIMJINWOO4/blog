@@ -43,12 +43,10 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
                         <motion.li
                             key={post.id}
                             variants={fadeInUp}
-                            className='bg-gray-100 dark:bg-zinc-600 p-4 rounded-lg shadow'
+                            className='bg-gray-100 dark:bg-zinc-600 p-4 rounded-lg hover:drop-shadow-base'
                         >
                             <Link href={`/posts/${post.id}`}>
-                                <div className='text-xl font-semibold hover:underline dark:text-white'>
-                                    {post.title}
-                                </div>
+                                <div className='text-xl font-semibold dark:text-white'>{post.title}</div>
                             </Link>
                             <p className='text-gray-600 dark:text-gray-300'>{post.date}</p>
                         </motion.li>

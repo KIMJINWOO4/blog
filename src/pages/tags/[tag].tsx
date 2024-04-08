@@ -22,13 +22,8 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
             initial='initial'
             animate='animate'
             exit='exit'
-            className='flex flex-col min-h-screen bg-white dark:bg-zinc-600'
+            className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
-            <Head>
-                <title>Tags - {tag}</title>
-                <meta name='description' content='열심히 배우겠습니다.' />
-                <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
-            </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4'>
                 <motion.h1
@@ -48,13 +43,11 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                         <motion.li
                             key={post.id}
                             variants={fadeInUp}
-                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-md'
+                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 hover:drop-shadow-base rounded-md'
                         >
                             <Link href={`/posts/${post.id}`}>
-                                <div className='block'>
-                                    <h2 className='text-xl font-bold text-black mb-2 dark:text-white hover: dark:hover:text-black'>
-                                        {post.title}
-                                    </h2>
+                                <div className='block '>
+                                    <h2 className='text-xl font-bold text-black mb-2 dark:text-white'>{post.title}</h2>
                                     <div className='flex items-center text-gray-500 dark:text-gray-300'>
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'
@@ -74,17 +67,19 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                                         </svg>
                                         {post.date}
                                     </div>
-                                    <div className='flex flex-wrap'>
-                                        {post.tags.map((tag, index) => (
-                                            <Link key={index} href={`/tags/${tag}`} passHref>
-                                                <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono text-sm'>
-                                                    {tag}
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
                                 </div>
                             </Link>
+                            <div className='flex flex-wrap'>
+                                {post.tags.map((tag, index) => (
+                                    <Link
+                                        key={index}
+                                        href={`/tags/${tag}`}
+                                        className='flex mr-2 items-center rounded-lg transition-all dark:text-zinc-300 dark:hover:bg-zinc-800 px-2 py-1 mb-2 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono text-sm'
+                                    >
+                                        {tag}
+                                    </Link>
+                                ))}
+                            </div>
                         </motion.li>
                     ))}
                 </motion.ul>

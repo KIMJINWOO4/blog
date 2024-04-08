@@ -61,23 +61,26 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                         </motion.div>
                     </motion.section>
                 </div>
+                <div className='flex items-end'>
+                    <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 pt-6 dark:text-white'>
+                        All Posts
+                    </motion.h1>
+                    <motion.h2 variants={fadeInSlideToLeft} className='text-l ml-1 font-bold my-4 pt-6 dark:text-white'>
+                        ({allPostsData.length})
+                    </motion.h2>
+                </div>
 
-                <motion.h1 variants={fadeInSlideToLeft} className='text-2xl font-bold my-4 pt-6 dark:text-white'>
-                    All Posts ({allPostsData.length})
-                </motion.h1>
                 <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit'>
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-2 p-2 border-b border-zinc-600 dark:border-white hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors'
+                            className='mb-2 p-2 border-b border-zinc-600 dark:border-white hover:drop-shadow-base transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
-                                <div className='block'>
-                                    <h2 className='text-2xl font-bold mb-2 text-black dark:text-white dark:hover:text-blue-300'>
-                                        {title}
-                                    </h2>
-                                    <div className='flex items-center text-gray-500 dark:text-gray-300'>
+                                <div className='block '>
+                                    <h2 className='text-2xl font-bold mb-2 text-black  dark:text-white'>{title}</h2>
+                                    <div className='flex items-center text-gray-500 dark:text-gray-300 '>
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'
                                             fill='none'
@@ -101,7 +104,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                             <div className='flex flex-wrap mt-2'>
                                 {tags.map((tag, index) => (
                                     <Link key={index} href={`/tags/${tag}`} passHref>
-                                        <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 mb-2 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono text-sm'>
+                                        <div className='flex mr-2 items-center rounded-lg transition-all dark:text-zinc-300 dark:hover:bg-zinc-800 px-2 py-1 mb-2 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono text-sm'>
                                             {tag}
                                         </div>
                                     </Link>
