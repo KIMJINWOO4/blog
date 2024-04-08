@@ -24,11 +24,6 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
             exit='exit'
             className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
-            <Head>
-                <title>Tags -{tag}</title>
-                <meta name='description' content='열심히 배우겠습니다.' />
-                <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
-            </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4'>
                 <motion.h1
