@@ -42,7 +42,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             </Head>
             <Header />
             <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
-                <div className='dark:text-white dark:border-white py-6 border-b-2 pb-4 border-spacing-2 font-serif border-zinc-700 '>
+                <div className='dark:text-white dark:border-zinc-400 py-6 border-b-2 pb-4 border-spacing-2 font-serif border-zinc-700 '>
                     <motion.section variants={staggerHalf} initial='initial' animate='animate'>
                         <h1 className=' text-5xl mb-4 font-bold'>jinwoo kim</h1>
 
@@ -74,11 +74,11 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-2 p-2 border-b border-zinc-600 dark:border-white hover:drop-shadow-base transition-colors'
+                            className='mb-2 p-2 border-b border-zinc-400 hover:drop-shadow-base-bold transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
-                                <div className='block '>
+                                <div className='block'>
                                     <h2 className='text-2xl font-bold mb-2 text-black  dark:text-white'>{title}</h2>
                                     <div className='flex items-center text-gray-500 dark:text-gray-300 '>
                                         <svg
