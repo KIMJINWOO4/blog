@@ -12,6 +12,8 @@ import langNginx from 'highlight.js/lib/languages/nginx';
 import { PostMetadata } from '../../../types/post';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkToc from 'remark-toc';
+import Head from 'next/head';
+
 interface PostProps {
     postData: PostMetadata;
 }
@@ -30,6 +32,11 @@ const Post: NextPage<PostProps> = ({ postData }) => {
 
     return (
         <div className='flex flex-col min-h-screen dark:bg-zinc-700'>
+            <Head>
+                <title>{postData.title}</title>
+                <meta name='description' content='열심히 배우겠습니다.' />
+                <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
+            </Head>
             <Header />
             <main className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
                 <article className='prose lg:prose-xl dark:prose-dark max-w-none'>

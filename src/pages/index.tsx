@@ -36,7 +36,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
             className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
             <Head>
-                <title>K - log</title>
+                <title>Blog - Jinwoo Kim</title>
                 <meta name='description' content='열심히 배우겠습니다.' />
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>

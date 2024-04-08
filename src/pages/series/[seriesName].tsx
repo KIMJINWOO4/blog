@@ -8,6 +8,8 @@ import { getSeries, getPostsBySeries } from '@/lib/posts';
 import { PostMetadata } from '../../../types/post';
 import { motion } from 'framer-motion';
 import { staggerOne, fadeInUp } from '@/constants/animations';
+import Head from 'next/head';
+
 interface SeriesPostsPageProps {
     posts: PostMetadata[];
 }
@@ -23,6 +25,11 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
             exit='exit'
             className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
+            <Head>
+                <title>Series - {seriesName}</title>
+                <meta name='description' content='열심히 배우겠습니다.' />
+                <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
+            </Head>
             <Header />
             <motion.div variants={staggerOne} className='flex-grow p-4 container mx-auto px-4 py-8'>
                 <motion.h1 variants={fadeInUp} className='text-3xl font-extrabold mb-6 dark:text-white font-serif'>
