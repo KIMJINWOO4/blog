@@ -43,7 +43,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                         <motion.li
                             key={post.id}
                             variants={fadeInUp}
-                            className='mb-5 p-4 border-b border-gray-200 dark:border-gray-700 hover:drop-shadow-base-bold rounded-md'
+                            className='mb-5 p-4  hover:drop-shadow-base-bold rounded-md'
                         >
                             <Link href={`/posts/${post.id}`}>
                                 <div className='block '>

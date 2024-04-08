@@ -74,7 +74,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
                             key={id}
-                            className='mb-2 p-2 border-b border-zinc-400 hover:drop-shadow-base-bold transition-colors'
+                            className='mb-2 p-2 hover:drop-shadow-base-bold transition-colors'
                             variants={fadeInUp}
                         >
                             <Link href={`/posts/${id}`}>
