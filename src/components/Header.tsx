@@ -44,6 +44,7 @@ const Header = () => {
                 </div>
 
                 {/* 메뉴 토글 버튼 */}
+                {/*
                 <motion.button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className='text-2xl'
@@ -53,7 +54,7 @@ const Header = () => {
                     exit='exit'
                 >
                     ☰
-                </motion.button>
+                </motion.button>*/}
             </div>
         </header>
     );
