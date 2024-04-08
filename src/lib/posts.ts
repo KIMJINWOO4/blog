@@ -51,7 +51,7 @@ export async function getPostData(id: string): Promise<any> {
     const mdxSource = await serialize(content, {
         mdxOptions: {
             remarkPlugins: [
-                [remarkToc, { ordered: true }], // 옵션을 전달하는 배열 형태로 설정
+                [remarkToc, {}], // 옵션을 전달하는 배열 형태로 설정
             ],
             rehypePlugins: [
                 rehypeHighlight as unknown as Pluggable,

@@ -39,7 +39,7 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                     {series.map((serie) => (
                         <motion.div
                             key={serie.name}
-                            className='border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 hover:bg-secondary dark:hover:bg-zinc-500'
+                            className='border border-gray-300 dark:border-zinc-600 bg-white px-4 py-2 dark:bg-zinc-700 shadow-md rounded-lg transition-transform transform hover:scale-105 hover:bg-secondary dark:hover:bg-zinc-500'
                             variants={fadeInUp}
                         >
                             <Link href={`/series/${serie.name}`}>

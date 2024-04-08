@@ -71,7 +71,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                                     <div className='flex flex-wrap'>
                                         {post.tags.map((tag, index) => (
                                             <Link key={index} href={`/tags/${tag}`} passHref>
-                                                <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono'>
+                                                <div className='flex mr-2 items-center rounded-lg transition-all hover:bg-secondary dark:hover:bg-zinc-800 px-2 py-1 ring-1 dark:bg-zinc-600 ring-neutral-300 dark:ring-neutral-600 font-mono text-sm'>
                                                     {tag}
                                                 </div>
                                             </Link>

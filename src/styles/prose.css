@@ -32,7 +32,7 @@
 }
 
 .prose a {
-    @apply text-indigo-500 hover:text-green-400 no-underline break-words transition-all;
+    @apply text-zinc-500 dark:text-zinc-300 hover:text-black no-underline break-words transition-all;
     @apply decoration-neutral-450 underline-offset-2 hover:decoration-neutral-350;
 }
 .prose a:has(strong) {

@@ -15,21 +15,20 @@ const Header = () => {
                     {/* 로고 */}
                     <Link href='/'>
                         <motion.div
-                            className='flex items-center cursor-pointer'
+                            className='flex items-center cursor-pointer hover:bg-secondary rounded-md'
                             variants={fadeInUp}
                             initial='initial'
                             animate='animate'
                             exit='exit'
                         >
-                            <span role='img' aria-label='logo' className='text-2xl'>
-                                📚
+                            <span role='img' aria-label='logo' className='px-2 text-2xl text-center'>
+                                💻
                             </span>
-                            <span className='text-xl font-semibold ml-2 font-serif'>K - log</span>
                         </motion.div>
                     </Link>
                     {/* 네비게이션 메뉴 */}
                     <motion.nav variants={fadeInUp} initial='initial' animate='animate' exit='exit'>
-                        <ul className='flex mx-10 space-x-4 items-center'>
+                        <ul className='flex ml-2 mr-10 space-x-4 items-center'>
                             <li>
                                 <Link href='/'>
                                     <div className='text-lg hover:text-blue-500 font-bold'>Blog</div>
