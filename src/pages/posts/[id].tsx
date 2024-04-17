@@ -39,7 +39,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
             </Head>
             <Header />
             <main className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
-                <article className='prose lg:prose-xl dark:prose-dark max-w-none'>
+                <article className='prose lg:prose-xl lg:px-24 dark:prose-dark max-w-none'>
                     <motion.h1
                         initial={{ opacity: 0, x: -100 }}
                         animate={{ opacity: 1, x: 0 }}
