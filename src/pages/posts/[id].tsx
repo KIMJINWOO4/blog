@@ -13,6 +13,7 @@ import { PostMetadata } from '../../../types/post';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkToc from 'remark-toc';
 import Head from 'next/head';
+import Comments from '@/components/common/Comments';
 
 interface PostProps {
     postData: PostMetadata;
@@ -89,6 +90,7 @@ const Post: NextPage<PostProps> = ({ postData }) => {
                         ))}
                     </motion.div>
                     <MDXRemote {...postData.mdxSource} {...options} />
+                    <Comments />
                 </article>
             </main>
             <Footer />
