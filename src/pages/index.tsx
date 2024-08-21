@@ -41,10 +41,11 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
-            <div className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
-                <div className='dark:text-white dark:border-zinc-400 py-6 border-b-2 pb-4 border-spacing-2 font-serif border-zinc-700 '>
+            <div className='flex-grow container mx-auto p-4 sm:p-6 max-w-4xl'>
+                {' '}
+                <div className='dark:text-white dark:border-zinc-400 py-6 border-b-2 pb-4 border-spacing-2 font-serif border-zinc-700'>
                     <motion.section variants={staggerHalf} initial='initial' animate='animate'>
-                        <h1 className=' text-5xl mb-4 font-bold'>jinwoo kim</h1>
+                        <h1 className='text-5xl mb-4 font-bold'>jinwoo kim</h1>
 
                         <motion.div variants={fadeInHalf} className='mt-6 mb-4'>
                             Aspiring Frontend Web Developer
@@ -57,7 +58,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                         </motion.div>
 
                         <motion.div variants={fadeInHalf} className='my-4'>
-                            <ToggleInfo className='dark: text-gray-400 hover:text-gray-950'></ToggleInfo>
+                            <ToggleInfo className='dark:text-gray-400 hover:text-gray-950'></ToggleInfo>
                         </motion.div>
                     </motion.section>
                 </div>
@@ -69,7 +70,6 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                         ({allPostsData.length})
                     </motion.h2>
                 </div>
-
                 <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit'>
                     {allPostsData.map(({ id, date, title, tags }) => (
                         <motion.li
@@ -79,7 +79,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                         >
                             <Link href={`/posts/${id}`}>
                                 <div className='block'>
-                                    <h2 className='text-2xl font-bold mb-2 text-black  dark:text-white'>{title}</h2>
+                                    <h2 className='text-2xl font-bold mb-2 text-black dark:text-white'>{title}</h2>
                                     <div className='flex items-center text-gray-500 dark:text-gray-300 '>
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'
@@ -89,7 +89,7 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
                                             stroke='currentColor'
                                             width='14'
                                             height='14'
-                                            className='mr-2' // 아이콘과 날짜 사이 간격 조정
+                                            className='mr-2'
                                         >
                                             <path
                                                 strokeLinecap='round'

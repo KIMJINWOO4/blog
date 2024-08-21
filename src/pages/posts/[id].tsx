@@ -39,16 +39,16 @@ const Post: NextPage<PostProps> = ({ postData }) => {
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
-            <main className='flex-grow container mx-auto p-4 px-10 sm:px-6'>
+            <main className='flex-grow container mx-auto p-4 px-10 sm:px-6 sm:p-6 max-w-6xl'>
                 <article className='prose lg:prose-xl lg:px-24 dark:prose-dark max-w-none'>
-                    <motion.h1
+                    <motion.h2
                         initial={{ opacity: 0, x: -100 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className='text-4xl font-bold mb-4 dark:text-white'
+                        className='text-3xl font-bold mb-4 dark:text-white'
                     >
                         {postData.title}
-                    </motion.h1>
+                    </motion.h2>
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

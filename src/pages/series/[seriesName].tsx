@@ -31,7 +31,7 @@ const SeriesPostsPage: NextPage<SeriesPostsPageProps> = ({ posts }) => {
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
-            <motion.div variants={staggerOne} className='flex-grow p-4 container mx-auto px-4 py-8'>
+            <motion.div variants={staggerOne} className='flex-grow p-4 container mx-auto px-4 py-8 sm:p-6 max-w-4xl'>
                 <motion.h1 variants={fadeInUp} className='text-3xl font-extrabold mb-6 dark:text-white font-serif'>
                     Series Name: {seriesName}
                 </motion.h1>

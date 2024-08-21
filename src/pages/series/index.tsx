@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { fadeInUp, staggerOne, staggerHalf, fadeIn } from '@/constants/animations';
+import { fadeInUp, staggerHalf } from '@/constants/animations';
 import { getSeries } from '@/lib/posts';
 import { PostMetadata } from '../../../types/post';
 import Head from 'next/head';
@@ -28,11 +28,13 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
-            <div className='flex-grow px-4 py-8 container mx-auto p-4'>
+            <div className='flex-grow px-4 py-8 container mx-auto p-4  p-4 sm:p-6 max-w-4xl'>
                 <motion.h1 className='text-3xl dark:text-white mb-4 font-serif font-extrabold' variants={fadeInUp}>
                     Series
                 </motion.h1>
-                <p className='text-xl dark:text-white *:font-bold mb-4 font-mono'>검색결과 {series.length}건</p>
+                <motion.p className='text-xl dark:text-white *:font-bold mb-4 font-mono' variants={fadeInUp}>
+                    검색결과 {series.length}건
+                </motion.p>
                 <motion.div
                     variants={fadeInUp}
                     className='text-md dark:text-zinc-400 *:font-bold font-mono mt-4 mb-10 '
@@ -41,7 +43,7 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                     모음입니다.
                     <br /> 각각의 글은 저만의 이야기를 담고 있지만, 함께 모였을 때 더 큰 의미와 가치를 전달해 줍니다.
                 </motion.div>
-                <motion.div className='grid grid-cols-1 md:grid-cols-2 gap-4 dark:text-white' variants={staggerOne}>
+                <motion.div className='grid grid-cols-1 md:grid-cols-2 gap-4 dark:text-white'>
                     {series.map((serie) => (
                         <motion.div
                             key={serie.name}

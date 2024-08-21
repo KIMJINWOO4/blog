@@ -38,8 +38,8 @@ const Footer = () => {
                         Next.js
                     </a>
                     <span>, </span>
-                    <a href='https://pages.github.com/' className='text-primary transition hover:text-secondary'>
-                        Github Pages
+                    <a href='https://www.netlify.com/' className='text-primary transition hover:text-secondary'>
+                        Netlify
                     </a>
                 </p>
             </div>
