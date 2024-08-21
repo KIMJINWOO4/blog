@@ -25,7 +25,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
             className='flex flex-col min-h-screen bg-white dark:bg-zinc-700'
         >
             <Header />
-            <div className='flex-grow container mx-auto p-4'>
+            <div className='flex-grow container mx-auto p-4 sm:p-6 max-w-4xl'>
                 <motion.h1
                     variants={fadeInSlideToLeft}
                     className='text-3xl font-extrabold my-4 dark:text-white font-serif'

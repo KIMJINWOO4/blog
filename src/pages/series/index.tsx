@@ -28,7 +28,7 @@ const SeriesPage: NextPage<SeriesPageProps> = ({ series }) => {
                 <meta name='google-site-verification' content='jPTIFNVfyPOTm8WUaEHm9XtinouRCPGnGOUDKdx9Szc' />
             </Head>
             <Header />
-            <div className='flex-grow px-4 py-8 container mx-auto p-4  p-4 sm:p-6 max-w-4xl'>
+            <div className='flex-grow px-4 py-8 container mx-auto p-4 sm:p-6 max-w-4xl'>
                 <motion.h1 className='text-3xl dark:text-white mb-4 font-serif font-extrabold' variants={fadeInUp}>
                     Series
                 </motion.h1>
