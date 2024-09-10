@@ -38,7 +38,13 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                 >
                     검색 결과: {filteredPosts.length}건
                 </motion.h3>
-                <motion.ul variants={staggerHalf} initial='initial' animate='animate' exit='exit' className='list-none'>
+                <motion.ul
+                    variants={staggerHalf}
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    className='list-none space-y-4'
+                >
                     {filteredPosts.map((post) => (
                         <motion.li
                             key={post.id}
@@ -57,7 +63,7 @@ const TagPage: NextPage<TagPageProps> = ({ filteredPosts }) => {
                                     stroke='currentColor'
                                     width='14'
                                     height='14'
-                                    className='mr-2' // 아이콘과 날짜 사이 간격 조정
+                                    className='mr-2'
                                 >
                                     <path
                                         strokeLinecap='round'
