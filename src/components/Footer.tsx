@@ -4,7 +4,7 @@ const Footer = () => {
         <footer className='pb-8 text-sm text-neutral-800 dark:text-neutral-400'>
             <hr className='mb-8 border-1 w-full border-neutral-300 transition-all dark:border-neutral-700' />
 
-            <div className='flex flex-col items-end space-y-1 mr-10'>
+            <div className='flex flex-col items-center space-y-1 mx-10 md:items-end md:mt-0 md:mb-2'>
                 <div className='flex space-x-2 mb-2'>
                     <a
                         key='velog'
@@ -21,14 +21,14 @@ const Footer = () => {
                         <ContactsIcon contact='github' />
                     </a>
                     <a
-                        key='likedin'
+                        key='linkedin'
                         href='https://www.linkedin.com/in/%EC%A7%84%EC%9A%B0-%EA%B9%80-7114b3267/'
                         className="'text-primary transition hover:text-secondary'"
                     >
                         <ContactsIcon contact='linkedin' />
                     </a>
                 </div>
-                <p>
+                <p className='text-center md:text-right'>
                     <span>© since 2024 </span>
                     <a href='https://ak-47.netlify.app/' className='text-primary transition hover:text-secondary'>
                         KIMJINWOO4's Blog
