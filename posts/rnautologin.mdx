@@ -1,0 +1,271 @@
+---
+title: '[ReactNative] 자동 로그인'
+date: '2024-10-25'
+tags: ['ReactNative', '자동 로그인']
+series: 'ReactNative'
+---
+
+## TOC
+
+# 0. `authToken` 과 `refreshToken` 의 차이
+
+## 0-1. `authToken`
+
+`authToken`은 사용자가 우리 앱에서 활동을 할 때 어떤 유저인가를 인증하는 정보로 사용되는 인증 정보
+(예시를 들자면 백에 사용자의 친구 목록을 물어보고 싶을 때 `authToken`을 header에 넣고 `/members/friends` 에 `GET` 요청을 하면 해당 유저의 친구 정보를 전달해준다던지..)
+
+(웹에서 `localstorage`나 `cookie` 에 넣어두고 사용하는 authToken과 똑같은 용도로 사용한다고 생각하면 될 듯)
+
+## 0-2. `refreshToken`
+
+`refreshToken` 은 자동 로그인을 위해서 사용하는건데 `authToken`을 받을 수 있는 갱신권이라고 생각하면 될 듯
+
+우리는 사용자가 자동 로그인 체크 박스를 체크하면 `AsyncStorage`에 `AuthLogin` 을 `Y` 로 설정하고 로그인 시 받는 `refreshToken`을 `AsyncStorage`에 같이 저장해주면 돼
+
+예시)
+
+```tsx
+//사용자가 체크박스를 체크했다면
+if (isAutoLogin) {
+    // AsyncStorage에 자동 로그인에 필요한 정보 저장
+    await setItem('autoLogin', 'Y');
+    await setItem('refreshToken', refreshToken);
+}
+```
+
+만약 자동 로그인을 체크하고 로그인한 적이 있던 사용자는 `AsyncStorage` 에 `autoLogin` 과 `refreshToken` 값이 존재할 것이고 그 값을 통해 `authToken`을 받아오는 구조인것임!
+
+예시)
+
+```tsx
+//랜딩 페이지 화면이 시작될 때
+useEffect(() => {
+    const checkAutoLogin = async () => {
+        const autoLoginFlag = await getItem('autoLogin');
+        const refreshToken = await getItem('refreshToken');
+        //AsyncStorage에서 저장이 됐든 안됐든 autoLogin과 refreshToken 값을 가져와서
+        if (autoLoginFlag === 'Y' && refreshToken) {
+            //값의 존재 유무를 확인하고
+            const response = await autoLogin(refreshToken); //autoLogin에 필요한 api 요청을 통해
+            if (response.success) {
+                navigation.navigate('Home'); //authToken을 설정한 뒤 Home화면으로 랜더링
+            }
+        }
+    };
+    checkAutoLogin();
+}, []);
+```
+
+---
+
+# 1. 로그인
+
+## 1-1. HTTP 통신 체크
+
+먼저 HTTP 통신이 되는지 확인해야함
+
+**POST**: `/members/login`
+
+### 요청 URI
+
+```json
+POST: /members/login
+```
+
+### 요청 Body
+
+```json
+{
+    "email": "아이디",
+    "password": "비밀번호"
+}
+```
+
+### 응답 Header
+
+```json
+authorization: Token 값
+```
+
+### 응답 Body
+
+```tsx
+{
+    "success": true,
+    "response": {
+        "refreshToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBwdXNhbi5hYy5rciIsImlzcyI6IkdyYXNzU2VydmVyIiwiaWF0IjoxNzI4MDQzNzE1LCJleHAiOjE3MzA2MzU3MTV9.V7lkKJN4PJahEIxh-tySXqJVZhguytjV_hReqR4ZMFE",
+        "accessToken": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBwdXNhbi5hYy5rciIsImlzcyI6IkdyYXNzU2VydmVyIiwiaWF0IjoxNzI4MDQzNzE2LCJleHAiOjE3MjgwNDczMTZ9.PxmqHEE6kqwWrhDtp90FLgJZgkj5-eq_-gX5EMMpdpM",
+        "email": "admin@pusan.ac.kr"
+    },
+    "error": null
+}
+```
+
+`Postman` , `Swagger` 등을 통해 연결이 되는 것은 확인하면 돼
+(이 과정을 한 번 하고 가는게 어떻게 오는지 볼 수 있어서 좋음 한 번 하고 가는게 나중에 연결할 때 편해)
+
+## 1-2. 응답 헤더로 `AsyncStorage` 에 authToken 채우기
+
+보조용으로 `response.data.response.accessToken` 에도 값이 들어오지만 정석적으로 들어오는 `response.headers['authorization']` 값을 `AsyncStorage` 에 채움으로써 전역적으로 토큰을 사용할 수 있게 하면 됨.
+
+현재는 `AsyncStorage` 에 `authToken` 을 넣고 있지만 백엔드에서 정해둔 `authToken` 의 유효기간은 1시간으로 1시간이 지나면 갱신을 통해 유효기간을 늘려줘야한다.
+
+(ex 사용자가 잔디 타이머를 1시간 이상 키고 있을 떄 백그라운드에서 갱신을 통해 사용자의 토큰 유효기간을 늘려줘야함)
+
+이 과정을 하기 위해선 유효기간 설정이 필요한데 이건 전역 상태 관리인 `recoil` 과 같은 라이브러리의 `staleTime` 을 사용해서 하는게 더 알맞다고 생각해서 `authToken`은 `recoil` 에 저장해둔다.
+
+```tsx
+const handleLogin = async (email: string, password: string) => {
+    try {
+        const response = await apiClient.post('/members/login', {
+            email,
+            password,
+        });
+        const authToken = response.headers['authorization'];
+        const refreshToken = response.data.response.refreshToken;
+        //로그인 시 authToken과 refreshToken을 가져오고 authToken을 저장
+        //(이걸 recoil로 바꾸면 좋을 것 같아)
+        await setItem('authToken', authToken);
+        //우선 refreshToken의 저장 유무는 체크박스의 체킹 유무에 따라 다르기 떄문에 여기서 저장 X
+        return {
+            success: true,
+            data: {
+                refreshToken, //자동 로그인을 할 것인지 체크를 해야하기 때문에 LandingScreen으로
+                //토큰을 넘겨줘서, 체크 됐다면 setItem 할 예정
+            },
+            headers: response.headers,
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            error: error.response?.data || error.message,
+        };
+    }
+};
+```
+
+## 1-3. `LandingScreen`에서 `refreshToken` 저장 유무 체크하기
+
+![isAutoLogin을 연결하면 됨!](https://velog.velcdn.com/images/keroeroe14/post/32d57b00-fabd-4d69-8c3a-d46596560ebd/image.png)
+
+```tsx
+//로그인 버튼을 누르면
+const handleLoginPress = async () => {
+    try {
+        //위의 함수를 호출
+        const response = await handleLogin(email, password);
+
+        if (response.success) {
+            // 로그인 성공 시
+            const refreshToken = response.data.refreshToken;
+
+            if (isAutoLogin) {
+                //자동 로그인 체크박스를 체크했는지 확인
+                // 자동 로그인 정보 저장
+                await setItem('autoLogin', 'Y');
+                await setItem('refreshToken', refreshToken);
+                //아까 위에서 받아온 리프레시 토큰을 AsyncStorage에 저장
+            } else {
+                // 만약 자동 로그인을 선택하지 않았다면 autoLogin 되지 않도록
+                await setItem('autoLogin', '');
+                await setItem('refreshToken', '');
+            }
+            const authToken = response.headers['authorization'];
+            await setItem('authToken', authToken);
+
+            navigation.navigate('Home');
+        }
+    } catch (error) {
+        console.log('오류', error.message || '로그인 중 오류가 발생했습니다.');
+    }
+};
+```
+
+---
+
+# 2. 자동 로그인
+
+## 2-1. HTTP 통신 체크
+
+### 요청 URI
+
+```json
+POST: /members/auto-login
+```
+
+### 요청 Body
+
+```java
+{
+	"refreshToken": "리프레시 토큰값"
+}
+```
+
+### 응답 Header
+
+```json
+authorization: Token 값
+```
+
+로그인과 마찬가지로 `Postman`, `Swagger` 로 한 번씩 응답이 오는지 확인하고 가면 좋다.
+
+---
+
+## 2-2. `AsyncStorage` 의 자동 로그인 유무 확인하기
+
+앱을 실행하면 가장 먼저 실행되는 `LandingScreen`에 `useEffect` 로 렌더링 될 때 체크하는 `[]` 조건으로 자동 로그인 값의 유무를 확인하면 됨.
+
+```tsx
+useEffect(() => {
+    //LandingScreen이 실행됐을 때 자동 로그인 값의 유무를 확인
+    const checkAutoLogin = async () => {
+        const autoLoginFlag = await getItem('autoLogin');
+        const refreshToken = await getItem('refreshToken');
+        if (autoLoginFlag === 'Y' && refreshToken) {
+            const response = await autoLogin(refreshToken);
+            if (response.success) {
+                navigation.navigate('Home');
+                //성공한다면 Home으로 가고 아니면 그냥 그대로
+                //LandingScreen을 렌더링 하면 됨 !
+            }
+        }
+    };
+    checkAutoLogin();
+}, []);
+```
+
+이렇게 자동 로그인 유무를 확인하고 밑에 보면
+
+```tsx
+const response = await autoLogin(refreshToken);
+```
+
+이 줄에서 위에 적힌 HTTP 통신을 통해 요청 Body로 `refreshToken`을 보내고 응답 Header로 `authToken` 을 받아오면 됨 !
+
+```tsx
+export const autoLogin = async (refreshToken: string) => {
+    try {
+        const response = await apiClient.post('/members/auto-login', {
+            refreshToken,
+        }); //body에 refreshToken을 넣어 HTTP 통신 요청
+
+        const authToken = response.headers['authorization'];
+        //받아온 authToken을 현재는 asyncstorage에 저장중인데
+        //이건 태영이 너가 recoil로 바꿔줄 수 있을 거라고 믿어..
+        await setItem('authToken', authToken);
+
+        return {
+            success: true,
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            error: error.response?.data || error.message,
+        };
+    }
+};
+```
+
+여기서 좀 헷갈릴 수 있는건 `refreshToken`은 한 번 받아오고 나서 7일에서 30일정도의 만료기간을 가지기 때문에 만료 됐을 때 error로 알아서 잡힐거고 우리가 따로 바꿔줄 경우는 딱 하나 뿐인데 백엔드랑 얘기해서 `refreshToken`이 만료되면 오는 에러코드가 몇 번인지 알아내서 해당 에러코드일 때만 사용자에게 자동 로그인이 만료되어 다시 로그인해주세요 띄우고 리프레시 토큰을 초기화 해주면 된다.
+
+ex) 백엔드에서 만약에 `250` 번 에러코드를 `refreshToken` 만료코드로 줬다면 `AsyncStorage` 에서 `refreshToken`를 지우면 될 듯 !
