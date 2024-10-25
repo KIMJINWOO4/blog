@@ -20,7 +20,7 @@ series: 'ReactNative'
 
 `refreshToken` 은 자동 로그인을 위해서 사용하는건데 `authToken`을 받을 수 있는 갱신권이라고 생각하면 될 듯
 
-우리는 사용자가 자동 로그인 체크 박스를 체크하면 `AsyncStorage`에 `AuthLogin` 을 `Y` 로 설정하고 로그인 시 받는 `refreshToken`을 `AsyncStorage`에 같이 저장해주면 돼
+우리는 사용자가 자동 로그인 체크 박스를 체크하면 `AsyncStorage`에 `AuthLogin` 을 `Y` 로 설정하고 로그인 시 받는 `refreshToken`을 `AsyncStorage`에 같이 저장해주면 됨.
 
 예시)
 
@@ -101,8 +101,8 @@ authorization: Token 값
 }
 ```
 
-`Postman` , `Swagger` 등을 통해 연결이 되는 것은 확인하면 돼
-(이 과정을 한 번 하고 가는게 어떻게 오는지 볼 수 있어서 좋음 한 번 하고 가는게 나중에 연결할 때 편해)
+`Postman` , `Swagger` 등을 통해 연결이 되는 것은 확인하면 된다.
+(이 과정을 한 번 하고 가는게 어떻게 오는지 볼 수 있어서 좋음 한 번 하고 가는게 나중에 연결할 때 편하다)
 
 ## 1-2. 응답 헤더로 `AsyncStorage` 에 authToken 채우기
 
