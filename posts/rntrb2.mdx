@@ -1,0 +1,363 @@
+---
+title: '[ReactNative] React-Native Bundler 변경 도전기'
+date: '2024-12-24'
+tags: ['ReactNative', 'react-native-esbuild', 'bundler']
+series: 'ReactNative'
+---
+
+## TOC
+
+JANDI 앱을 개발하며 팀의 DX를 개선하기 위한 여러 시도를 하는 중이고, 목표는 크게 3가지로 잡았다.
+
+1. 컴포넌트, 상태 관리 로직, 상수, 스타일 분리와 구조를 컨벤션에 맞춰 변경
+    - [x] 구체적인 `code` , `commit` , `Review` , `PullRequest` , `Github Project` 협업 프로세스 설계
+    - [x] 컴포넌트 및 스타일 분리
+    - [ ] 상태 관리 로직 분리
+    - [ ] 기능 단위 `Jest` 테스트 로직
+2. CI/CD 파이프라인 구축
+    - [ ] `Github CI` 를 이용한 `AOS` `iOS` 테스트 로직 구축하기
+    - [ ] `FastLane` 를 통한 `CD` 라인 구축
+3. `Metro` 보다 성능 좋은 번들링 툴로 변경해보기
+    - [ ] `react-native-esbuild` 로 변경해보기
+    - [ ] 직접 `oxc` 혹은 `esbuild` 로 번들러 수정을 통한 성능 개선에 도전해보기
+
+이 중에서 1번은 팀원들과 함께 열심히 하는 중이고 !!
+
+나를 포함한 프론트엔드 팀원들의 컴퓨터 사양이 그다지 좋지 못한 관계로 3번부터 해보기로 했다.
+
+~~가장 오래걸리는 팀원은 캐시 리셋 후 약 20분을 기다린다고 하더라..~~
+
+---
+
+# `react-native-esbuild`
+
+우선, 나는 “`React-Native`에서 `Metro`가 아닌 번들러를 사용 할 수 있다.”라고 상상하지 못했었는데,
+어떻게 하면 이 팀원의 고통을 조금이나마 덜어줄 수 있을까 하는 마음에 성능 개선을 할 수 있는 방법을 찾던 도중 `Metro` 를 대체하는 번들러를 찾았다.
+
+[react-native-esbuild-docs](<[https://react-native-esbuild.vercel.app](https://react-native-esbuild.vercel.app/)>)
+
+심지어 만든 분이 한국인이시고, 운영하시는 블로그에는 정말 상세하게 개발 과정과 `react-native` 내부의 실행 로직에 대해 설명해두셨다.
+
+**RN에 관심이 있다면 해당 시리즈를 읽는 것을 강력 추천한다 !!**
+
+[React Native Under The Hood](https://geundung.dev/126)
+
+사실 직접 `oxc` 혹은 `esbuild`를 건드려 볼 생각은 해보지 못했었는데, 이 분의 포스트를 보며 운영체제 수업을 듣는 기분도 들고 굉장히 흥미로웠기 때문에 새로운 목표로 잡아보기로 했다.
+
+물론 어렵겠지만 실패하더라도 재밌었으면 된 것이고, 내 것으로 못만들더라도 `patch-package` 로 작은 하나의 로직에서라도 성능 개선을 해본다면 그것 나름대로 재밌지 아니할까..?
+
+각설하고, 위 공식문서의 설명대로 `installation` 과 `Basic Configuration`, `prsets` 를 보며 JANDI에 맞게 설정해 나갔다.
+
+## 1. 첫 번째 오류
+
+`core configuration load error`
+
+configuration 파일을 못찾고 있었다.
+
+그래서 무엇이 잘못인지 계속 찾아봤는데 똑같은 이슈를 해당 라이브러리 레포지토리에서 발견했다.
+
+[RNE#59](https://github.com/leegeunhyeok/react-native-esbuild/issues/59)
+
+물론 발견한다고 달라지는 것은 없었지만… 한참을 삽질한 결과 알아냈다.
+
+```jsx
+//example
+warn core could not resolve configuration file
+debug core configuration load error
+{
+  "code": "MODULE_NOT_FOUND",
+  "requireStack": [
+    "node_modules/@react-native-esbuild/core/dist/index.js",
+    "node_modules/@react-native-esbuild/cli/dist/index.js"
+  ]
+}
+```
+
+에러가 발생한 `react-native-esbuild.js`
+
+```jsx
+/**
+ * @type {import('@react-native-esbuild/core').Config}
+ */
+exports.default = {
+    cache: true,
+    logger: {
+        disabled: false,
+        timestamp: null,
+    },
+    resolver: {
+        mainFields: ['react-native', 'browser', 'main', 'module'],
+        sourceExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
+        assetExtensions: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'bmp', 'webp'],
+    },
+    transformer: {
+        jsc: {
+            transform: {
+                react: {
+                    runtime: 'automatic',
+                },
+            },
+        },
+        stripFlowPackageNames: ['react-native'],
+        additionalTransformRules: {
+            babel: [
+                {
+                    test: (path, code) => {
+                        return (
+                            /node_modules\/react-native-reanimated\//.test(path) ||
+                            code.includes('react-native-reanimated')
+                        );
+                    },
+                    options: {
+                        plugins: ['react-native-reanimated/plugin'],
+                        babelrc: false,
+                    },
+                },
+            ],
+        },
+    },
+    web: {
+        template: './template/index.html',
+    },
+    plugins: [],
+};
+```
+
+공식 홈페이지를 자세히 본 결과
+
+-   `Basic Configuration` → `react-native-esbuild.js`
+-   `Custom Transformation` → `react-native-esbuild.config.js`
+
+인 것인데, 그걸 잘못보고 하나의 파일에 두 설정을 모두 넣어서 찾지 못한 것 같다.
+
+### **해결 후 코드**
+
+```jsx
+//<projectRoot>/react-native-esbuild.config.js
+/**
+ * @type {import('@react-native-esbuild/core').Config}
+ */
+exports.default = {
+    cache: true,
+    logger: {
+        disabled: false,
+        timestamp: null,
+    },
+    resolver: {
+        mainFields: ['react-native', 'browser', 'main', 'module'],
+        sourceExtensions: [
+            /* internal/lib/defaults.ts */
+        ],
+        assetExtensions: [
+            /* internal/lib/defaults.ts */
+        ],
+    },
+    transformer: {
+        jsc: {
+            transform: {
+                react: {
+                    runtime: 'automatic',
+                },
+            },
+        },
+        stripFlowPackageNames: ['react-native'],
+    },
+    web: {
+        template: './template/index.html',
+    },
+};
+```
+
+```jsx
+//<projectRoot>/react-native-esbuild.config.js
+exports.default = {
+    transformer: {
+        additionalTransformRules: {
+            babel: [
+                {
+                    test: (path, code) => {
+                        return (
+                            /node_modules\/react-native-reanimated\//.test(path) ||
+                            code.includes('react-native-reanimated')
+                        );
+                    },
+                    options: {
+                        plugins: ['react-native-reanimated/plugin'],
+                        babelrc: false,
+                    },
+                },
+            ],
+        },
+    },
+};
+```
+
+~~이제 되겠찌~~
+
+## 2. 두 번째 오류
+
+`no matching export in ~`
+
+```bash
+
+error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressEvents"
+
+    node_modules/@react-native-aria/interactions/src/index.ts:2:19:
+      2 │ export { usePress, PressEvents, PressHookProps, PressProps, PressRe...
+        ╵                    ~~~~~~~~~~~
+
+error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressHookProps"
+
+    node_modules/@react-native-aria/interactions/src/index.ts:2:32:
+      2 │ ...{ usePress, PressEvents, PressHookProps, PressProps, PressResult...
+        ╵                             ~~~~~~~~~~~~~~
+
+error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressProps"
+
+    node_modules/@react-native-aria/interactions/src/index.ts:2:48:
+      2 │ ...essEvents, PressHookProps, PressProps, PressResult } from './use...
+        ╵                               ~~~~~~~~~~
+
+error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressResult"
+
+    node_modules/@react-native-aria/interactions/src/index.ts:2:60:
+      2 │ ...vents, PressHookProps, PressProps, PressResult } from './usePress';
+        ╵                                       ~~~~~~~~~~~
+
+ » esbuild  ✖ [android, dev] failed!
+╭───────────╯
+├─ 0 warnings
+├─ 4 errors
+╰─ 8.553
+```
+
+아뿔싸, 거의 다 왔다고 생각했건만 이게 무슨 일이람…
+
+해당하는 라이브러리에 대해 `presets` 리스트에 존재하는지 확인했지만 확인할 수 없었다.
+
+그렇다면, 블로그를 통해 배운 얕은 지식으로 해당 라이브러리, 그리고 위에서 봤던 이슈를 보고 추측을 해보자면
+
+해당 오류는 `@react-native-aria` 라이브러리를 `esbuild` 에서 코드 변환 중 문제가 발생한 것이고, 해당 라이브러리에서 문제가 되는 부분을 찾아보았다.
+
+https://github.com/GeekyAnts/react-native-aria
+
+4년 전 업데이트를 끝으로 `DEPRECATED` 된 라이브러리였다.
+
+내부엔 구조 컴포넌트가 있는데, 각 컴포넌트마다 `module:metro-react-native-babel-preset` 을 포함한 `babel.config.js` 가 따로 있었다.
+
+블로그를 통해 알아본 자료에 따르면 `esbuild` 의 구현된 `Loader` 는 `ES6` 미만을 지원하지 않았고, `ES6` 미만의 경우 `swc` 를 통해 코드 변환을 진행하여 `Babel` 을 대체하여 빌드 속도를 개선하고 `Flow` 구문은 `surcase` 를 통해 구현했다고 한다.
+
+해당 라이브러리는 `Flow` 구문이 없었고, `swc`를 이용해 해당 라이브러리를 변환해준다면 해결할 수 있을 것이다.
+
+```jsx
+//<projectRoot>/react-native-esbuild.config.js
+exports.default = {
+    transformer: {
+        fullyTransformPackageNames: ['@react-native-aria'],
+        additionalTransformRules: {
+            babel: [
+                {
+                    test: (path, code) => {
+                        return (
+                            /node_modules\/react-native-reanimated\//.test(path) ||
+                            code.includes('react-native-reanimated')
+                        );
+                    },
+                    options: {
+                        plugins: ['react-native-reanimated/plugin'],
+                        babelrc: false,
+                    },
+                },
+            ],
+        },
+    },
+};
+```
+
+라고 생각했는데 ..?
+
+## 3. 세 번째 오류
+
+`The plugin "react-native-runtime-transform-plugin" was triggered by this import` 라는 오류가 또 발생했다.
+
+```bash
+
+  The plugin "react-native-runtime-transform-plugin" was triggered by this import
+
+    node_modules/@react-native-aria/overlays/src/index.ts:21:34:
+      21 │ var _useOverlayPosition = require('./useOverlayPosition');
+         ╵                                   ~~~~~~~~~~~~~~~~~~~~~~
+
+ » esbuild  ✖ [android, dev] failed!
+╭───────────╯
+├─ 0 warnings
+├─ 1 errors
+╰─ 1.469
+
+info cli sending 'reload' command...
+error dev-server unable to get bundle
+Invariant Violation: build failed
+    at invariant (~/node_modules/invariant/invariant.js:40:15)
+    at _ReactNativeEsbuildBundler.handleBuildEnd (~/node_modules/@react-native-esbuild/core/dist/index.js:849:36)
+    at ~/node_modules/@react-native-esbuild/core/dist/index.js:552:15
+    at async ~/node_modules/esbuild/lib/main.js:1496:27
+```
+
+밑 구절을 보니 `@react-native-aria/overlays` 친구가 가져온 라이브러리 같은데, 이 친구도 어떤 친구인치 파악해서 `swc` 혹은 `surcase` 로 변환하도록 변경해주어야 할 것 같다.
+
+[해당 라이브러리](https://babeljs.io/docs/babel-plugin-transform-react-jsx)
+
+이렇게만 봐선 모르겠기에 두 방법 모두 시도 해보기로 결정
+
+**SWC 변환 실패**
+
+```bash
+ » esbuild  ✖ [android, dev] failed!
+╭───────────╯
+├─ 0 warnings
+├─ 1 errors
+╰─ 1.354
+
+error core ✘ [ERROR] Error transforming ~/node_modules/@react-native-aria/overlays/src/useOverlayPosition.ts: Unexpected token, expected "," (99:26) [plugin react-native-runtime-transform-plugin]
+
+    node_modules/sucrase/dist/parser/traverser/util.js:99:14:
+      99 │   const err = new SyntaxError(message);
+         ╵               ^
+```
+
+Flow구문이었나보다..
+
+```jsx
+    stripFlowPackageNames: ['react-native-runtime-transform-plugin'],
+    fullyTransformPackageNames: ['@react-native-aria'],
+
+```
+
+```bash
+
+ » esbuild  ✔ [android, dev] done!
+╭───────────╯
+├─ 0 warnings
+├─ 0 errors
+╰─ 9.358
+
+log app Running "jandiT" with {"rootTag":11}
+```
+
+드디어 성공했다 !!!
+
+속도도 굉장히 빠른게 느껴진다.
+
+---
+
+## 맺으며
+
+하면서 되게 재밌어서 트러블 슈팅만 하는 것이 아니라 이것 저것 소스를 뜯어보느라 시간이 좀 많이 걸렸다.
+
+왜 이렇게 되는 것인지도 궁금하고 찾아보니까
+
+https://github.com/oblador/react-native-oxc
+
+벌써 `react-native-oxc`도 누군가에 의해 만들어진 것 같은데 속도를 비교해보면서 성능 개선할 수 있는 부분이 어디에 있는지 찾아보면 재밌을 것 같다.
+
+얼른 팀원에게 가져다 줘야지 !
