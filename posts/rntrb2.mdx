@@ -10,16 +10,16 @@ series: 'ReactNative'
 JANDI 앱을 개발하며 팀의 DX를 개선하기 위한 여러 시도를 하는 중이고, 목표는 크게 3가지로 잡았다.
 
 1. 컴포넌트, 상태 관리 로직, 상수, 스타일 분리와 구조를 컨벤션에 맞춰 변경
-    - [x] 구체적인 `code` , `commit` , `Review` , `PullRequest` , `Github Project` 협업 프로세스 설계
-    - [x] 컴포넌트 및 스타일 분리
-    - [ ] 상태 관리 로직 분리
-    - [ ] 기능 단위 `Jest` 테스트 로직
+    - 구체적인 `code` , `commit` , `Review` , `PullRequest` , `Github Project` 협업 프로세스 설계
+    - 컴포넌트 및 스타일 분리
+    - 상태 관리 로직 분리
+    - 기능 단위 `Jest` 테스트 로직
 2. CI/CD 파이프라인 구축
-    - [ ] `Github CI` 를 이용한 `AOS` `iOS` 테스트 로직 구축하기
-    - [ ] `FastLane` 를 통한 `CD` 라인 구축
+    - `Github CI` 를 이용한 `AOS` `iOS` 테스트 로직 구축하기
+    - `FastLane` 를 통한 `CD` 라인 구축
 3. `Metro` 보다 성능 좋은 번들링 툴로 변경해보기
-    - [ ] `react-native-esbuild` 로 변경해보기
-    - [ ] 직접 `oxc` 혹은 `esbuild` 로 번들러 수정을 통한 성능 개선에 도전해보기
+    - `react-native-esbuild` 로 변경해보기
+    - 직접 `oxc` 혹은 `esbuild` 로 번들러 수정을 통한 성능 개선에 도전해보기
 
 이 중에서 1번은 팀원들과 함께 열심히 하는 중이고 !!
 
@@ -34,7 +34,7 @@ JANDI 앱을 개발하며 팀의 DX를 개선하기 위한 여러 시도를 하�
 우선, 나는 “`React-Native`에서 `Metro`가 아닌 번들러를 사용 할 수 있다.”라고 상상하지 못했었는데,
 어떻게 하면 이 팀원의 고통을 조금이나마 덜어줄 수 있을까 하는 마음에 성능 개선을 할 수 있는 방법을 찾던 도중 `Metro` 를 대체하는 번들러를 찾았다.
 
-[react-native-esbuild-docs](<[https://react-native-esbuild.vercel.app](https://react-native-esbuild.vercel.app/)>)
+[react-native-esbuild-docs](https://react-native-esbuild.vercel.app/)
 
 심지어 만든 분이 한국인이시고, 운영하시는 블로그에는 정말 상세하게 개발 과정과 `react-native` 내부의 실행 로직에 대해 설명해두셨다.
 
@@ -215,7 +215,7 @@ error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/in
 error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressProps"
 
     node_modules/@react-native-aria/interactions/src/index.ts:2:48:
-      2 │ ...essEvents, PressHookProps, PressProps, PressResult } from './use...
+      2 │ ...essEvents, PressHookProps, PressProps, PressResult } from './use...'
         ╵                               ~~~~~~~~~~
 
 error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/interactions/src/usePress.ts" for import "PressResult"
@@ -239,7 +239,7 @@ error core ✘ [ERROR] No matching export in "node_modules/@react-native-aria/in
 
 해당 오류는 `@react-native-aria` 라이브러리를 `esbuild` 에서 코드 변환 중 문제가 발생한 것이고, 해당 라이브러리에서 문제가 되는 부분을 찾아보았다.
 
-https://github.com/GeekyAnts/react-native-aria
+[문제 발생 라이브러리](https://github.com/GeekyAnts/react-native-aria)
 
 4년 전 업데이트를 끝으로 `DEPRECATED` 된 라이브러리였다.
 
@@ -354,9 +354,11 @@ log app Running "jandiT" with {"rootTag":11}
 
 하면서 되게 재밌어서 트러블 슈팅만 하는 것이 아니라 이것 저것 소스를 뜯어보느라 시간이 좀 많이 걸렸다.
 
-왜 이렇게 되는 것인지도 궁금하고 찾아보니까
+> 물론 현재는`@react-native-aria`에 대한 코드 변환을 통해 번들러 트러블 슈팅을 진행했지만, 해당 라이브러리는 JANDI 기초 컴포넌트 변경 과정에서 현재 채택된 `gluestack ui v2`의 레거시 버전으로 채택 과정에서 설치/사용된 것으로 보인다.
+> 따라서, 해당 라이브러리는 issue로 올려 삭제할 예정이다.
+> 번들러 구조와 실행 과정을 조금 더 자세히 알 수 있는 좋은 경험을 해주는 툴로서의 의미를 !
 
-https://github.com/oblador/react-native-oxc
+[react-native-oxc](https://github.com/oblador/react-native-oxc)
 
 벌써 `react-native-oxc`도 누군가에 의해 만들어진 것 같은데 속도를 비교해보면서 성능 개선할 수 있는 부분이 어디에 있는지 찾아보면 재밌을 것 같다.
 
